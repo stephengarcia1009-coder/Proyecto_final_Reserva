@@ -1,0 +1,16 @@
+# Archivos de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Archivos compilados
+bin/
+obj/
+
+# Configuraciones sensibles
+appsettings.Development.json
+.env
+.env.*
+
+# Archivos temporales
+*.log
