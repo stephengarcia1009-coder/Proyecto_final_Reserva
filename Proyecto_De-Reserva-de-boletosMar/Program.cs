@@ -1,7 +1,16 @@
+
+using Microsoft.EntityFrameworkCore;
+using Proyecto_De_Reserva_de_boletosMar.Data;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<PangaDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("ConexionPanga")));
 
 var app = builder.Build();
 
