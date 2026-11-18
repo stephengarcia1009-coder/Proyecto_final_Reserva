@@ -1,4 +1,6 @@
 
+using Proyecto_De_Reserva_de_boletosMar.Interfaces;
+using Proyecto_De_Reserva_de_boletosMar.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Proyecto_De_Reserva_de_boletosMar.Data;
 
@@ -11,6 +13,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PangaDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("ConexionPanga")));
+
+builder.Services.AddScoped(
+    typeof(IGenericRepository<>),
+    typeof(GenericRepository<>));
 
 var app = builder.Build();
 

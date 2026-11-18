@@ -420,6 +420,26 @@ namespace Proyecto_De_Reserva_de_boletosMar.Migrations
                     b.HasKey("EstadoReservaId");
 
                     b.ToTable("EstadosReserva");
+
+                    b.HasData(
+                        new
+                        {
+                            EstadoReservaId = 1,
+                            Descripcion = "Reserva esperando el pago",
+                            Nombre = "Pendiente de pago"
+                        },
+                        new
+                        {
+                            EstadoReservaId = 2,
+                            Descripcion = "Reserva pagada y confirmada",
+                            Nombre = "Confirmada"
+                        },
+                        new
+                        {
+                            EstadoReservaId = 3,
+                            Descripcion = "Reserva cancelada",
+                            Nombre = "Cancelada"
+                        });
                 });
 
             modelBuilder.Entity("Proyecto_De_Reserva_de_boletosMar.Models.EstadoViaje", b =>
@@ -442,6 +462,26 @@ namespace Proyecto_De_Reserva_de_boletosMar.Migrations
                     b.HasKey("EstadoViajeId");
 
                     b.ToTable("EstadosViaje");
+
+                    b.HasData(
+                        new
+                        {
+                            EstadoViajeId = 1,
+                            Descripcion = "Viaje pendiente de realizarse",
+                            Nombre = "Programado"
+                        },
+                        new
+                        {
+                            EstadoViajeId = 2,
+                            Descripcion = "Viaje cancelado",
+                            Nombre = "Cancelado"
+                        },
+                        new
+                        {
+                            EstadoViajeId = 3,
+                            Descripcion = "Viaje realizado",
+                            Nombre = "Finalizado"
+                        });
                 });
 
             modelBuilder.Entity("Proyecto_De_Reserva_de_boletosMar.Models.MetodoPago", b =>
@@ -464,6 +504,20 @@ namespace Proyecto_De_Reserva_de_boletosMar.Migrations
                     b.HasKey("MetodoPagoId");
 
                     b.ToTable("MetodosPago");
+
+                    b.HasData(
+                        new
+                        {
+                            MetodoPagoId = 1,
+                            Descripcion = "Pago presencial",
+                            Nombre = "Efectivo"
+                        },
+                        new
+                        {
+                            MetodoPagoId = 2,
+                            Descripcion = "Pago realizado mediante simulación",
+                            Nombre = "Pago simulado"
+                        });
                 });
 
             modelBuilder.Entity("Proyecto_De_Reserva_de_boletosMar.Models.Pago", b =>

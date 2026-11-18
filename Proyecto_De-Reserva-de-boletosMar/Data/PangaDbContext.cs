@@ -152,7 +152,28 @@ namespace Proyecto_De_Reserva_de_boletosMar.Data
     .HasForeignKey(d => d.ViajeId)
     .OnDelete(DeleteBehavior.Restrict);
 
+
+            modelBuilder.Entity<EstadoViaje>().HasData(
+                new EstadoViaje { EstadoViajeId = 1, Nombre = "Programado", Descripcion = "Viaje pendiente de realizarse" },
+                new EstadoViaje { EstadoViajeId = 2, Nombre = "Cancelado", Descripcion = "Viaje cancelado" },
+                new EstadoViaje { EstadoViajeId = 3, Nombre = "Finalizado", Descripcion = "Viaje realizado" }
+            );
+
+            modelBuilder.Entity<EstadoReserva>().HasData(
+                new EstadoReserva { EstadoReservaId = 1, Nombre = "Pendiente de pago", Descripcion = "Reserva esperando el pago" },
+                new EstadoReserva { EstadoReservaId = 2, Nombre = "Confirmada", Descripcion = "Reserva pagada y confirmada" },
+                new EstadoReserva { EstadoReservaId = 3, Nombre = "Cancelada", Descripcion = "Reserva cancelada" }
+            );
+
+            modelBuilder.Entity<MetodoPago>().HasData(
+                new MetodoPago { MetodoPagoId = 1, Nombre = "Efectivo", Descripcion = "Pago presencial" },
+                new MetodoPago { MetodoPagoId = 2, Nombre = "Pago simulado", Descripcion = "Pago realizado mediante simulación" }
+            );
+
+
         }
+
+
     }   
 
 
