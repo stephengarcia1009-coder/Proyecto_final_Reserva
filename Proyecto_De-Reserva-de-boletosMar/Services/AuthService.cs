@@ -22,6 +22,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
             _context = context;
         }
 
+
         public async Task<IdentityResult> RegistrarAsync(
             string nombreCompleto,
             string correo,
@@ -39,6 +40,16 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
 
             if (!resultado.Succeeded)
                 return resultado;
+
+            // Asignar automáticamente el rol Cliente
+            var resultadoRol = await _userManager.AddToRoleAsync(
+                usuario, "Cliente");
+
+            if (!resultadoRol.Succeeded)
+            {
+                await _userManager.DeleteAsync(usuario);
+                return resultadoRol;
+            }
 
             try
             {

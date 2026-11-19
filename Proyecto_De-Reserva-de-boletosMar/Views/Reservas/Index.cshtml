@@ -1,0 +1,89 @@
+﻿
+@model IEnumerable<Proyecto_De_Reserva_de_boletosMar.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Gestión de reservas";
+}
+
+<h2>Gestión de reservas</h2>
+
+<div class="mb-3">
+    <a asp-action="CrearPresencial" class="btn btn-primary">
+        + Registrar reserva presencial
+    </a>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Cliente</th>
+                <th>Ruta</th>
+                <th>Fecha de salida</th>
+                <th>Boletos</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var reserva in Model)
+                {
+                    <tr>
+                        <td>@reserva.CodigoReserva</td>
+                        <td>@reserva.Cliente?.NombreCompleto</td>
+                        <td>
+                            @reserva.Viaje?.Ruta?.Origen?.Nombre -
+                            @reserva.Viaje?.Ruta?.Destino?.Nombre
+                        </td>
+                        <td>
+                            @reserva.Viaje?.FechaSalida.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                        <td>@reserva.CantidadBoletos</td>
+                        <td>@reserva.Total.ToString("C")</td>
+                        <td>@reserva.EstadoReserva?.Nombre</td>
+                        <td>
+                            <a asp-action="Details"
+                               asp-route-id="@reserva.ReservaId"
+                               class="btn btn-info btn-sm">
+                                Detalles
+                            </a>
+
+                            @if (reserva.EstadoReservaId != 3)
+                            {
+                                <form asp-action="Cancelar"
+                                      asp-route-id="@reserva.ReservaId"
+                                      method="post"
+                                      class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm">
+                                        Cancelar
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center">
+                        No hay reservas registradas.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

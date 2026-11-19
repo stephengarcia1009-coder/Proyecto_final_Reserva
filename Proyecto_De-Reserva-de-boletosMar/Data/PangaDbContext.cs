@@ -117,10 +117,10 @@ namespace Proyecto_De_Reserva_de_boletosMar.Data
                 .IsUnique();
 
             modelBuilder.Entity<DetalleReserva>()
-    .HasOne(d => d.Reserva)
-    .WithMany()
-    .HasForeignKey(d => d.ReservaId)
-    .OnDelete(DeleteBehavior.Restrict);
+       .HasOne(d => d.Reserva)
+       .WithMany(r => r.DetallesReserva)
+       .HasForeignKey(d => d.ReservaId)
+       .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Pago>()
     .HasOne(p => p.Reserva)

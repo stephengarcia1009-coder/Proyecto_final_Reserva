@@ -1,0 +1,142 @@
+﻿
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Proyecto_De_Reserva_de_boletosMar.Interfaces;
+using Proyecto_De_Reserva_de_boletosMar.Models;
+
+namespace Proyecto_De_Reserva_de_boletosMar.Controllers
+{
+    [Authorize(Roles = "Administrador")]
+    public class ViajesController : Controller
+    {
+        private readonly IViajeService _viajeService;
+        private readonly IRutaService _rutaService;
+        private readonly IPangaService _pangaService;
+
+        public ViajesController(
+            IViajeService viajeService,
+            IRutaService rutaService,
+            IPangaService pangaService)
+        {
+            _viajeService = viajeService;
+            _rutaService = rutaService;
+            _pangaService = pangaService;
+        }
+
+        private async Task CargarListasAsync()
+        {
+            var rutas = await _rutaService.ObtenerTodasAsync();
+            var pangas = await _pangaService.ObtenerTodasAsync();
+
+            ViewBag.Rutas = new SelectList(
+                rutas.Where(r => r.Activa),
+                "RutaId",
+                "Descripcion");
+
+            ViewBag.Pangas = new SelectList(
+                pangas,
+                "PangaId",
+                "Nombre");
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var viajes = await _viajeService.ObtenerTodosAsync();
+            return View(viajes);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var viaje = await _viajeService.ObtenerPorIdAsync(id);
+
+            if (viaje == null)
+                return NotFound();
+
+            return View(viaje);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            await CargarListasAsync();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Viaje viaje)
+        {
+            if (!ModelState.IsValid)
+            {
+                await CargarListasAsync();
+                return View(viaje);
+            }
+
+            var resultado = await _viajeService.RegistrarAsync(viaje);
+
+            if (!resultado)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "No se pudo registrar el viaje. Verifica los datos y que la ruta esté activa.");
+
+                await CargarListasAsync();
+                return View(viaje);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var viaje = await _viajeService.ObtenerPorIdAsync(id);
+
+            if (viaje == null)
+                return NotFound();
+
+            await CargarListasAsync();
+
+            return View(viaje);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Viaje viaje)
+        {
+            if (id != viaje.ViajeId)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+            {
+                await CargarListasAsync();
+                return View(viaje);
+            }
+
+            var resultado = await _viajeService.ActualizarAsync(id, viaje);
+
+            if (!resultado)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "No se pudo actualizar el viaje. Verifica los datos.");
+
+                await CargarListasAsync();
+                return View(viaje);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancelar(int id)
+        {
+            var resultado = await _viajeService.CancelarAsync(id);
+
+            if (!resultado)
+                return NotFound();
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}

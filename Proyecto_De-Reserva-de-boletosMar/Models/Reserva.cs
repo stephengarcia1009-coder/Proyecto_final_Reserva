@@ -33,6 +33,9 @@ namespace Proyecto_De_Reserva_de_boletosMar.Models
         public Viaje? Viaje { get; set; }
 
         public EstadoReserva? EstadoReserva { get; set; }
+
+        public ICollection<DetalleReserva> DetallesReserva { get; set; }
+    = new List<DetalleReserva>();
     }
 }
 
