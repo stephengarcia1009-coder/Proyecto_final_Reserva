@@ -1,0 +1,74 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.Models.Destino
+
+@{
+    ViewData["Title"] = "Detalles del destino";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+
+        <div class="mb-4">
+            <h2 class="fw-bold text-primary">Detalles del destino</h2>
+            <p class="text-muted">Información del destino seleccionado.</p>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-4">
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Identificador
+                    </label>
+                    <p class="fs-5">@Model.DestinoId</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Nombre del destino
+                    </label>
+                    <p class="fs-5 fw-semibold">@Model.Nombre</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Descripción
+                    </label>
+                    <p class="fs-5">
+                        @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                                                ? "Sin descripción"
+                                                : Model.Descripcion)
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Estado
+                    </label>
+
+                    @if (Model.Activo)
+                    {
+                        <span class="badge bg-success fs-6">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary fs-6">Inactivo</span>
+                    }
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.DestinoId"
+                       class="btn btn-primary">
+                        Editar destino
+                    </a>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        Volver a destinos
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
