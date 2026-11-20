@@ -1,0 +1,96 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.ViewModels.ReservaViewModel
+
+@{
+    ViewData["Title"] = "Crear reserva";
+    var viaje = ViewBag.Viaje as Proyecto_De_Reserva_de_boletosMar.Models.Viaje;
+}
+
+<div class="container mt-4 mb-5">
+    <h2 class="fw-bold">Registrar reserva</h2>
+    <p class="text-muted">Completa los datos de los pasajeros.</p>
+
+    @if (viaje != null)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="fw-bold">Información del viaje</h5>
+                <p class="mb-2">
+                    <strong>Ruta:</strong>
+                    @(viaje.Ruta?.Descripcion ?? $"Ruta #{viaje.RutaId}")
+                </p>
+                <p class="mb-2">
+                    <strong>Panga:</strong>
+                    @(viaje.Panga?.Nombre ?? $"Panga #{viaje.PangaId}")
+                </p>
+                <p class="mb-0">
+                    <strong>Salida:</strong>
+                    @viaje.FechaSalida.ToString("dd/MM/yyyy hh:mm tt")
+                </p>
+            </div>
+        </div>
+    }
+
+    <form asp-action="Crear" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="ViajeId" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Datos del pasajero</h5>
+
+                @for (int i = 0; i < Model.Pasajeros.Count; i++)
+                {
+                    <div class="border rounded p-3 mb-3">
+                        <h6>Pasajero @(i + 1)</h6>
+
+                        <div class="mb-3">
+                            <label asp-for="Pasajeros[i].NombrePasajero"
+                                   class="form-label">Nombre completo</label>
+                            <input asp-for="Pasajeros[i].NombrePasajero"
+                                   class="form-control"
+                                   maxlength="150"
+                                   placeholder="Ingrese el nombre completo" />
+                            <span asp-validation-for="Pasajeros[i].NombrePasajero"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-2">
+                            <label asp-for="Pasajeros[i].TelefonoPasajero"
+                                   class="form-label">Teléfono</label>
+                            <input asp-for="Pasajeros[i].TelefonoPasajero"
+                                   class="form-control"
+                                   maxlength="20"
+                                   placeholder="Ingrese el teléfono" />
+                            <span asp-validation-for="Pasajeros[i].TelefonoPasajero"
+                                  class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+
+                <p class="text-muted small">
+                    Por ahora se registra un pasajero por formulario.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Registrar reserva
+                    </button>
+
+                    <a asp-action="SeleccionarViaje"
+                       class="btn btn-secondary">
+                        Volver a los viajes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
