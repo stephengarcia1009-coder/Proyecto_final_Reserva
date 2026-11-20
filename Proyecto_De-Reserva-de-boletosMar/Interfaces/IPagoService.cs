@@ -7,7 +7,10 @@ namespace Proyecto_De_Reserva_de_boletosMar.Interfaces
     {
         Task<Pago?> ObtenerPorReservaAsync(int reservaId);
 
-        Task<bool> ProcesarPagoAsync(Pago pago);
+        Task<bool> ProcesarPagoAsync(
+            int reservaId,
+            int metodoPagoId,
+            bool pagoExitoso);
 
         Task<IEnumerable<DetallePago>> ObtenerIntentosAsync(int pagoId);
     }

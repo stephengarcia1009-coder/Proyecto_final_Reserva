@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Proyecto_De_Reserva_de_boletosMar</RootNamespace>
+    <UserSecretsId>089591b1-c671-4a75-8611-8353c91d9b89</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

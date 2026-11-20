@@ -1,4 +1,4 @@
-﻿@model Proyecto_De_Reserva_de_boletosMar.Models.Reserva
+@model Proyecto_De_Reserva_de_boletosMar.Models.Reserva
 
 @{
     ViewData["Title"] = "Detalles de la reserva";
@@ -21,34 +21,37 @@
         <div class="card-header bg-primary text-white">
             Información de la reserva
         </div>
-
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <strong>Código de reserva:</strong>
                     <p>@Model.CodigoReserva</p>
                 </div>
-
                 <div class="col-md-6 mb-3">
                     <strong>Fecha de registro:</strong>
                     <p>@Model.FechaReserva.ToString("dd/MM/yyyy HH:mm")</p>
                 </div>
-
                 <div class="col-md-6 mb-3">
                     <strong>Estado:</strong>
                     <p>@(Model.EstadoReserva?.Nombre ?? "Sin estado")</p>
                 </div>
-
                 <div class="col-md-6 mb-3">
                     <strong>Cantidad de boletos:</strong>
                     <p>@Model.CantidadBoletos</p>
                 </div>
-
                 <div class="col-md-6 mb-3">
                     <strong>Total:</strong>
                     <p>@Model.Total.ToString("C")</p>
                 </div>
             </div>
+
+            @if (Model.EstadoReservaId == 1)
+            {
+                <a asp-action="Pagar" asp-route-id="@Model.ReservaId"
+                   class="btn btn-success">
+                    Pagar reserva
+                </a>
+            }
         </div>
     </div>
 
@@ -56,22 +59,10 @@
         <div class="card-header bg-primary text-white">
             Información del cliente
         </div>
-
         <div class="card-body">
-            <p>
-                <strong>Nombre:</strong>
-                @(Model.Cliente?.NombreCompleto ?? "No disponible")
-            </p>
-
-            <p>
-                <strong>Correo:</strong>
-                @(Model.Cliente?.Correo ?? "No disponible")
-            </p>
-
-            <p>
-                <strong>Teléfono:</strong>
-                @(Model.Cliente?.Telefono ?? "No disponible")
-            </p>
+            <p><strong>Nombre:</strong> @(Model.Cliente?.NombreCompleto ?? "No disponible")</p>
+            <p><strong>Correo:</strong> @(Model.Cliente?.Correo ?? "No disponible")</p>
+            <p><strong>Teléfono:</strong> @(Model.Cliente?.Telefono ?? "No disponible")</p>
         </div>
     </div>
 
@@ -79,24 +70,18 @@
         <div class="card-header bg-primary text-white">
             Información del viaje
         </div>
-
         <div class="card-body">
             <p>
                 <strong>Ruta:</strong>
-                @(Model.Viaje?.Ruta?.Origen?.Nombre ?? "No disponible")
+                @(Model.Viaje?.Ruta?.Origen?.Nombre ?? Model.Viaje?.Ruta?.Descripcion ?? "No disponible")
                 -
-                @(Model.Viaje?.Ruta?.Destino?.Nombre ?? "No disponible")
+                @(Model.Viaje?.Ruta?.Destino?.Nombre ?? "")
             </p>
-
             <p>
                 <strong>Fecha de salida:</strong>
                 @(Model.Viaje?.FechaSalida.ToString("dd/MM/yyyy HH:mm") ?? "No disponible")
             </p>
-
-            <p>
-                <strong>Panga:</strong>
-                @(Model.Viaje?.Panga?.Nombre ?? "No disponible")
-            </p>
+            <p><strong>Panga:</strong> @(Model.Viaje?.Panga?.Nombre ?? "No disponible")</p>
         </div>
     </div>
 
@@ -104,7 +89,6 @@
         <div class="card-header bg-primary text-white">
             Pasajeros registrados
         </div>
-
         <div class="card-body">
             @if (Model.DetallesReserva != null && Model.DetallesReserva.Any())
             {
@@ -118,12 +102,10 @@
                                 <th>Precio unitario</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             @{
                                 int numero = 1;
                             }
-
                             @foreach (var pasajero in Model.DetallesReserva)
                             {
                                 <tr>
@@ -132,7 +114,6 @@
                                     <td>@pasajero.TelefonoPasajero</td>
                                     <td>@pasajero.PrecioUnitario.ToString("C")</td>
                                 </tr>
-
                                 numero++;
                             }
                         </tbody>
@@ -145,5 +126,4 @@
             }
         </div>
     </div>
-
 </div>
