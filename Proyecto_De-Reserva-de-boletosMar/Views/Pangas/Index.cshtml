@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Proyecto_De_Reserva_de_boletosMar.Models.Panga>
+
+@{
+    ViewData["Title"] = "Pangas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary">Pangas</h2>
+            <p class="text-muted">Administración de pangas registradas</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            Registrar panga
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Capacidad</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var panga in Model)
+                            {
+                                <tr>
+                                    <td>@panga.PangaId</td>
+                                    <td>@panga.Nombre</td>
+                                    <td>@panga.Capacidad pasajeros</td>
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(panga.Descripcion)
+                                                                        ? "Sin descripción"
+                                                                        : panga.Descripcion)
+                            </td>
+                            <td>
+                                <a asp-action="Details"
+                                   asp-route-id="@panga.PangaId"
+                                   class="btn btn-sm btn-outline-info">
+                                    Detalles
+                                </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@panga.PangaId"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Editar
+                                        </a>
+                                    </td>
+                                </tr>
+                                                }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <h5>No hay pangas registradas</h5>
+                    <p class="text-muted">
+                        Registra una panga para comenzar.
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
