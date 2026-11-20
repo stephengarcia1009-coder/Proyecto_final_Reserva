@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Proyecto_De_Reserva_de_boletosMar.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Mis reservas";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Mis reservas</h2>
+            <p class="text-muted">Consulta el estado de tus reservas.</p>
+        </div>
+
+        <a asp-action="SeleccionarViaje" class="btn btn-primary">
+            Nueva reserva
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var reserva in Model)
+        {
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between align-items-start">
+                        <div>
+                            <h5 class="fw-bold">
+                                Reserva #@reserva.CodigoReserva
+                            </h5>
+                            <p class="text-muted mb-2">
+                                Fecha de reserva:
+                                @reserva.FechaReserva.ToString("dd/MM/yyyy hh:mm tt")
+                            </p>
+                        </div>
+
+                        <span class="badge bg-secondary">
+                            @(reserva.EstadoReserva?.Nombre ?? $"Estado #{reserva.EstadoReservaId}")
+                        </span>
+                    </div>
+
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p class="mb-2">
+                                <strong>Ruta:</strong>
+                                @(reserva.Viaje?.Ruta?.Descripcion ?? "No disponible")
+                            </p>
+
+                            <p class="mb-2">
+                                <strong>Fecha de salida:</strong>
+                                @(reserva.Viaje != null
+                                                        ? reserva.Viaje.FechaSalida.ToString("dd/MM/yyyy hh:mm tt")
+                                                        : "No disponible")
+                    </p>
+                </div>
+
+                        <div class="col-md-6 mb-3">
+                            <p class="mb-2">
+                                <strong>Cantidad de boletos:</strong>
+                                @reserva.CantidadBoletos
+                            </p>
+
+                            <p class="mb-2">
+                                <strong>Total:</strong>
+                                C$ @reserva.Total.ToString("N2")
+                            </p>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mt-2">Pasajeros</h6>
+
+            @if (reserva.DetallesReserva != null && reserva.DetallesReserva.Any())
+                    {
+                        <ul class="mb-3">
+                            @foreach (var pasajero in reserva.DetallesReserva)
+                            {
+                                <li>
+                                    @pasajero.NombrePasajero
+                                    - @pasajero.TelefonoPasajero
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No hay pasajeros registrados.</p>
+                    }
+
+                    @if (reserva.EstadoReservaId == 1)
+                    {
+                        <form asp-action="Cancelar"
+                              asp-route-id="@reserva.ReservaId"
+                              method="post"
+                              onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta reserva?');">
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-outline-danger">
+                                Cancelar reserva
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            Todavía no tienes reservas registradas.
+            <div class="mt-3">
+                <a asp-action="SeleccionarViaje" class="btn btn-primary">
+                    Buscar viajes
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
