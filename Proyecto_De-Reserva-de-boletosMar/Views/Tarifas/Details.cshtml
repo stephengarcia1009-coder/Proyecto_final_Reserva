@@ -1,0 +1,47 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.Models.Tarifa
+
+@{
+    ViewData["Title"] = "Detalles de tarifa";
+}
+
+<div class="container mt-4">
+    <div class="mb-4">
+        <h2 class="fw-bold text-primary">Detalles de la tarifa</h2>
+        <p class="text-muted">Información de la tarifa registrada.</p>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">ID de tarifa</dt>
+                <dd class="col-sm-8">@Model.TarifaId</dd>
+
+                <dt class="col-sm-4">ID de ruta</dt>
+                <dd class="col-sm-8">@Model.RutaId</dd>
+
+                <dt class="col-sm-4">Precio</dt>
+                <dd class="col-sm-8 fw-bold text-primary">
+                    @Model.Precio.ToString("C")
+                </dd>
+
+                <dt class="col-sm-4">Fecha de actualización</dt>
+                <dd class="col-sm-8">
+                    @Model.FechaActualizacion.ToString("dd/MM/yyyy HH:mm")
+                </dd>
+            </dl>
+
+            <div class="mt-4">
+                <a asp-action="Edit"
+                   asp-route-id="@Model.TarifaId"
+                   class="btn btn-primary">
+                    Editar precio
+                </a>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
