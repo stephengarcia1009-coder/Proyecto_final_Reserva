@@ -1,0 +1,55 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.Models.Viaje
+
+@{
+    ViewData["Title"] = "Editar viaje";
+}
+
+<div class="container mt-4">
+    <h2>Editar viaje</h2>
+    <p class="text-muted">Modifica la información del viaje.</p>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="ViajeId" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="RutaId" class="form-label">Ruta</label>
+            <select asp-for="RutaId" asp-items="ViewBag.Rutas" class="form-select">
+                <option value="">Seleccione una ruta</option>
+            </select>
+            <span asp-validation-for="RutaId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PangaId" class="form-label">Panga</label>
+            <select asp-for="PangaId" asp-items="ViewBag.Pangas" class="form-select">
+                <option value="">Seleccione una panga</option>
+            </select>
+            <span asp-validation-for="PangaId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FechaSalida" class="form-label">Fecha y hora de salida</label>
+            <input asp-for="FechaSalida" type="datetime-local" class="form-control" />
+            <span asp-validation-for="FechaSalida" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Observaciones" class="form-label">Observaciones</label>
+            <textarea asp-for="Observaciones" class="form-control" rows="3" maxlength="250"></textarea>
+            <span asp-validation-for="Observaciones" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
