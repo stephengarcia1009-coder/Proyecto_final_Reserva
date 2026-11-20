@@ -1,0 +1,88 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.Models.Ruta
+
+@{
+    ViewData["Title"] = "Detalles de la ruta";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+
+        <div class="mb-4">
+            <h2 class="fw-bold text-primary">Detalles de la ruta</h2>
+            <p class="text-muted">
+                Información de la ruta seleccionada.
+            </p>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-4">
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Identificador
+                    </label>
+                    <p class="fs-5">@Model.RutaId</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Origen
+                    </label>
+                    <p class="fs-5 fw-semibold">
+                        @(Model.Origen?.Nombre ?? "No disponible")
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Destino
+                    </label>
+                    <p class="fs-5 fw-semibold">
+                        @(Model.Destino?.Nombre ?? "No disponible")
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Descripción
+                    </label>
+                    <p class="fs-5">
+                        @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                                                ? "Sin descripción"
+                                                : Model.Descripcion)
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted">
+                        Estado
+                    </label>
+
+                    @if (Model.Activa)
+                    {
+                        <span class="badge bg-success fs-6">Activa</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary fs-6">Inactiva</span>
+                    }
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.RutaId"
+                       class="btn btn-primary">
+                        Editar ruta
+                    </a>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        Volver a rutas
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
