@@ -1,6 +1,129 @@
-﻿namespace Proyecto_De_Reserva_de_boletosMar.Views.Rutas
-{
-    public class Index
-    {
-    }
+﻿@model IEnumerable<Proyecto_De_Reserva_de_boletosMar.Models.Ruta>
+
+@{
+    ViewData["Title"] = "Gestión de rutas";
 }
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary">Gestión de rutas</h2>
+            <p class="text-muted">Administra las rutas marítimas del sistema.</p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary">
+            + Nueva ruta
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover align-middle">
+
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var ruta in Model)
+                            {
+                                <tr>
+                                    <td>@ruta.RutaId</td>
+
+                                    <td>
+                                        @(ruta.Origen?.Nombre ?? "No disponible")
+                                    </td>
+
+                                    <td>
+                                        @(ruta.Destino?.Nombre ?? "No disponible")
+                                    </td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(ruta.Descripcion)
+                                                                        ? "Sin descripción"
+                                                                        : ruta.Descripcion)
+                            </td>
+
+                                    <td>
+                                @if (ruta.Activa)
+                                        {
+                                            <span class="badge bg-success">
+                                                Activa
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Inactiva
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex gap-1 flex-wrap">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@ruta.RutaId"
+                                               class="btn btn-info btn-sm">
+                                                Detalles
+                                            </a>
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@ruta.RutaId"
+                                               class="btn btn-warning btn-sm">
+                                                Editar
+                                            </a>
+
+                                            <form asp-action="CambiarEstado"
+                                                  asp-route-id="@ruta.RutaId"
+                                                  method="post">
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm @(ruta.Activa ? "btn-danger" : "btn-success")">
+                                                    @(ruta.Activa ? "Desactivar" : "Activar")
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">
+                                    No hay rutas registradas.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
