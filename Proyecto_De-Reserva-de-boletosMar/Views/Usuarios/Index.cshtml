@@ -1,0 +1,119 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.ViewModels.UsuariosGestionViewModel
+
+@{
+    ViewData["Title"] = "Gestión de usuarios";
+}
+
+<div class="container mt-4">
+    <h2>Gestión de usuarios</h2>
+    <p>Administra los roles y permisos de los usuarios registrados.</p>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    @foreach (var usuario in Model.Usuarios)
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5>@usuario.Email</h5>
+
+                <hr />
+
+                <h6>Roles asignados</h6>
+
+                @if (usuario.Roles.Any())
+                {
+                    @foreach (var rol in usuario.Roles)
+                    {
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-primary">@rol</span>
+
+                            <form asp-action="QuitarRol" method="post">
+                                <input type="hidden" name="usuarioId" value="@usuario.Id" />
+                                <input type="hidden" name="rol" value="@rol" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Quitar rol
+                                </button>
+                            </form>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No tiene roles asignados.</p>
+                }
+
+                <form asp-action="AsignarRol" method="post" class="mt-3">
+                    <input type="hidden" name="usuarioId" value="@usuario.Id" />
+
+                    <div class="input-group">
+                        <select name="rol" class="form-select" required>
+                            <option value="">Seleccionar rol</option>
+                            @foreach (var rol in Model.RolesDisponibles.Except(usuario.Roles))
+                            {
+                                <option value="@rol">@rol</option>
+                            }
+                        </select>
+
+                        <button type="submit" class="btn btn-primary">
+                            Asignar rol
+                        </button>
+                    </div>
+                </form>
+
+                <hr />
+
+                <h6>Permisos asignados</h6>
+
+                @if (usuario.Permisos.Any())
+                {
+                    @foreach (var permiso in usuario.Permisos)
+                    {
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span>@permiso</span>
+
+                            <form asp-action="QuitarPermiso" method="post">
+                                <input type="hidden" name="usuarioId" value="@usuario.Id" />
+                                <input type="hidden" name="permiso" value="@permiso" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Quitar permiso
+                                </button>
+                            </form>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No tiene permisos individuales asignados.</p>
+                }
+
+                <form asp-action="AsignarPermiso" method="post" class="mt-3">
+                    <input type="hidden" name="usuarioId" value="@usuario.Id" />
+
+                    <div class="input-group">
+                        <input type="text"
+                               name="permiso"
+                               class="form-control"
+                               placeholder="Nombre del permiso"
+                               required />
+
+                        <button type="submit" class="btn btn-success">
+                            Asignar permiso
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+</div>

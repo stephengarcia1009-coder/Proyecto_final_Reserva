@@ -8,10 +8,14 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UsuarioService(UserManager<IdentityUser> userManager)
+        public UsuarioService(
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<IEnumerable<IdentityUser>> ObtenerTodosAsync()
@@ -56,6 +60,13 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
             var resultado = await _userManager.RemoveFromRoleAsync(usuario, rol);
 
             return resultado.Succeeded;
+        }
+
+        public async Task<IEnumerable<string>> ObtenerRolesDisponiblesAsync()
+        {
+            return await _roleManager.Roles
+                .Select(r => r.Name!)
+                .ToListAsync();
         }
     }
 }
