@@ -1,12 +1,13 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Proyecto_De_Reserva_de_boletosMar.Constants;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.Models;
 
 namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize]
     public class DestinosController : Controller
     {
         private readonly IDestinoService _destinoService;
@@ -16,12 +17,14 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             _destinoService = destinoService;
         }
 
+        [Authorize(Policy = PermisosSistema.DestinosVer)]
         public async Task<IActionResult> Index()
         {
             var destinos = await _destinoService.ObtenerTodosAsync();
             return View(destinos);
         }
 
+        [Authorize(Policy = PermisosSistema.DestinosVer)]
         public async Task<IActionResult> Details(int id)
         {
             var destino = await _destinoService.ObtenerPorIdAsync(id);
@@ -32,12 +35,14 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return View(destino);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Destino destino)
@@ -57,6 +62,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -68,6 +74,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return View(destino);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Destino destino)
@@ -90,6 +97,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CambiarEstado(int id)

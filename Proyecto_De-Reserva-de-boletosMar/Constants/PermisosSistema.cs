@@ -11,11 +11,14 @@ namespace Proyecto_De_Reserva_de_boletosMar.Constants
 
         public const string ViajesVer = "Viajes.Ver";
         public const string ViajesGestionar = "Viajes.Gestionar";
+        public const string DestinosVer = "Destinos.Ver";
 
         public const string CatalogosGestionar = "Catalogos.Gestionar";
 
         public const string PermisosAsignar = "Permisos.Asignar";
         public const string PermisosRetirar = "Permisos.Retirar";
+
+        
 
         public static readonly IReadOnlyList<string> Todos =
             new List<string>
@@ -28,7 +31,9 @@ namespace Proyecto_De_Reserva_de_boletosMar.Constants
                 ViajesGestionar,
                 CatalogosGestionar,
                 PermisosAsignar,
+                DestinosVer,
                 PermisosRetirar
+                
             }.AsReadOnly();
 
         public static bool EsValido(string permiso)
