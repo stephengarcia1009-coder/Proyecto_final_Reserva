@@ -14,17 +14,20 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         private readonly IPermisoService _permisoService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public UsuariosController(
             IUsuarioService usuarioService,
             IPermisoService permisoService,
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _usuarioService = usuarioService;
             _permisoService = permisoService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index()
@@ -45,6 +48,18 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                     Email = usuario.Email,
                     Roles = (await _usuarioService.ObtenerRolesAsync(usuario.Id)).ToList(),
                     Permisos = (await _permisoService.ObtenerPermisosUsuarioAsync(usuario.Id)).ToList()
+                });
+            }
+
+            var roles = _roleManager.Roles.ToList();
+
+            foreach (var rol in roles)
+            {
+                modelo.RolesGestion.Add(new RolGestionItemViewModel
+                {
+                    Id = rol.Id,
+                    Nombre = rol.Name ?? string.Empty,
+                    Permisos = (await _permisoService.ObtenerPermisosRolAsync(rol.Id)).ToList()
                 });
             }
 
@@ -159,6 +174,66 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             TempData[resultado ? "Mensaje" : "Error"] =
                 resultado ? "Permiso retirado correctamente." : "No se pudo retirar el permiso.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AsignarPermisoRol(string rolId, string permiso)
+        {
+            if (string.IsNullOrWhiteSpace(rolId) ||
+                string.IsNullOrWhiteSpace(permiso))
+            {
+                TempData["Error"] = "Debes seleccionar un rol y un permiso.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var rol = await _roleManager.FindByIdAsync(rolId);
+
+            if (rol == null)
+            {
+                TempData["Error"] = "El rol seleccionado no existe.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var resultado = await _permisoService.AsignarPermisoRolAsync(
+                rolId, permiso.Trim());
+
+            TempData[resultado ? "Mensaje" : "Error"] =
+                resultado
+                ? "Permiso asignado al rol correctamente. Los usuarios de ese rol deberán iniciar sesión nuevamente."
+                : "No se pudo asignar el permiso al rol.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> QuitarPermisoRol(string rolId, string permiso)
+        {
+            if (string.IsNullOrWhiteSpace(rolId) ||
+                string.IsNullOrWhiteSpace(permiso))
+            {
+                TempData["Error"] = "Datos incompletos.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var rol = await _roleManager.FindByIdAsync(rolId);
+
+            if (rol == null)
+            {
+                TempData["Error"] = "El rol seleccionado no existe.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var resultado = await _permisoService.QuitarPermisoRolAsync(
+                rolId, permiso.Trim());
+
+            TempData[resultado ? "Mensaje" : "Error"] =
+                resultado
+                ? "Permiso retirado del rol correctamente. Los usuarios de ese rol deberán iniciar sesión nuevamente."
+                : "No se pudo retirar el permiso del rol.";
 
             return RedirectToAction(nameof(Index));
         }
