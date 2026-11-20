@@ -40,9 +40,9 @@
                 foreach (var viaje in viajes)
                 {
                     <option value="@viaje.ViajeId">
-                        @viaje.Ruta?.Origen?.Nombre -
-                        @viaje.Ruta?.Destino?.Nombre |
-                        @viaje.FechaSalida.ToString("dd/MM/yyyy HH:mm")
+                        @(viaje.Ruta?.Descripcion ?? $"Ruta #{viaje.RutaId}") |
+                        @viaje.FechaSalida.ToString("dd/MM/yyyy HH:mm") |
+                        @(viaje.Panga?.Nombre ?? $"Panga #{viaje.PangaId}")
                     </option>
                 }
             }
