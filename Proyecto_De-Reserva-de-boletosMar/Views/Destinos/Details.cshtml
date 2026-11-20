@@ -1,0 +1,53 @@
+﻿
+@model Proyecto_De_Reserva_de_boletosMar.Models.Destino
+
+@{
+    ViewData["Title"] = "Detalles del destino";
+}
+
+<div class="container mt-4">
+    <h2>Detalles del destino</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.DestinoId</dd>
+
+                <dt class="col-sm-3">Nombre</dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
+
+                <dt class="col-sm-3">Descripción</dt>
+                <dd class="col-sm-9">
+                    @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                        ? "Sin descripción"
+                        : Model.Descripcion)
+                </dd>
+
+                <dt class="col-sm-3">Estado</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Activo)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactivo</span>
+                    }
+                </dd>
+            </dl>
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.DestinoId"
+               class="btn btn-warning">
+                Editar
+            </a>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Volver
+            </a>
+
+        </div>
+    </div>
+</div>
