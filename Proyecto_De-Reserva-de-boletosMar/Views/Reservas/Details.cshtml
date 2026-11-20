@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            @if (Model.EstadoReservaId == 1)
+            @if (User.IsInRole("Cliente") && Model.EstadoReservaId == 1)
             {
                 <a asp-action="Pagar" asp-route-id="@Model.ReservaId"
                    class="btn btn-success">

@@ -97,16 +97,27 @@
 
                     @if (reserva.EstadoReservaId == 1)
                     {
-                        <form asp-action="Cancelar"
-                              asp-route-id="@reserva.ReservaId"
-                              method="post"
-                              onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta reserva?');">
-                            @Html.AntiForgeryToken()
+                        <div class="d-flex gap-2 flex-wrap">
 
-                            <button type="submit" class="btn btn-outline-danger">
-                                Cancelar reserva
-                            </button>
-                        </form>
+                            <a asp-action="Pagar"
+                               asp-route-id="@reserva.ReservaId"
+                               class="btn btn-success">
+                                Pagar reserva
+                            </a>
+
+                            <form asp-action="Cancelar"
+                                  asp-route-id="@reserva.ReservaId"
+                                  method="post"
+                                  onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta reserva?');">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit" class="btn btn-outline-danger">
+                                    Cancelar reserva
+                                </button>
+                            </form>
+
+                        </div>
                     }
                 </div>
             </div>
