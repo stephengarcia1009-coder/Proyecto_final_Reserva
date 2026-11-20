@@ -7,6 +7,8 @@ namespace Proyecto_De_Reserva_de_boletosMar.Interfaces
     {
         Task<IEnumerable<IdentityUser>> ObtenerTodosAsync();
 
+        Task<IEnumerable<string>> ObtenerRolesDisponiblesAsync();
+
         Task<IdentityUser?> ObtenerPorIdAsync(string usuarioId);
 
         Task<IList<string>> ObtenerRolesAsync(string usuarioId);
@@ -14,5 +16,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Interfaces
         Task<bool> AsignarRolAsync(string usuarioId, string rol);
 
         Task<bool> QuitarRolAsync(string usuarioId, string rol);
+
+
     }
 }
