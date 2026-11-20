@@ -1,0 +1,103 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.Models.Ruta
+
+@{
+    ViewData["Title"] = "Registrar ruta";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+
+        <div class="mb-4">
+            <h2 class="fw-bold text-primary">Registrar ruta</h2>
+            <p class="text-muted">
+                Completa la información de la nueva ruta marítima.
+            </p>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-4">
+
+                <form asp-action="Create" method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="OrigenId"
+                               class="form-label fw-semibold">
+                            Identificador del origen
+                        </label>
+
+                        <input asp-for="OrigenId"
+                               type="number"
+                               class="form-control"
+                               min="1"
+                               placeholder="Identificador del destino de origen" />
+
+                        <span asp-validation-for="OrigenId"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DestinoId"
+                               class="form-label fw-semibold">
+                            Identificador del destino
+                        </label>
+
+                        <input asp-for="DestinoId"
+                               type="number"
+                               class="form-control"
+                               min="1"
+                               placeholder="Identificador del destino de llegada" />
+
+                        <span asp-validation-for="DestinoId"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Descripcion"
+                               class="form-label fw-semibold">
+                            Descripción
+                        </label>
+
+                        <textarea asp-for="Descripcion"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Describe brevemente esta ruta"></textarea>
+
+                        <span asp-validation-for="Descripcion"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check form-switch mb-4">
+                        <input asp-for="Activa"
+                               class="form-check-input" />
+
+                        <label asp-for="Activa"
+                               class="form-check-label">
+                            Ruta activa
+                        </label>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            Guardar ruta
+                        </button>
+
+                        <a asp-action="Index"
+                           class="btn btn-outline-secondary">
+                            Volver a rutas
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
