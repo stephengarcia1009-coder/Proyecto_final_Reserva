@@ -1,8 +1,70 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="home-hero">
+    <div class="home-hero-content">
+        <span class="home-tag">SISTEMA DE RESERVAS MARÍTIMAS</span>
+
+        <h1>Tu próximo viaje<br />comienza aquí</h1>
+
+        <p>
+            Descubre nuestros destinos, consulta los viajes disponibles
+            y reserva tus boletos de manera fácil y segura.
+        </p>
+
+        <div class="home-buttons">
+            <a asp-controller="Viajes" asp-action="Index" class="btn-home-primary">
+                Explorar viajes
+            </a>
+
+            <a asp-controller="Destinos" asp-action="Index" class="btn-home-secondary">
+                Conocer destinos
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="home-services">
+    <div class="home-section-heading">
+        <span>DESCUBRE NUESTRO SERVICIO</span>
+        <h2>Viajar nunca fue tan sencillo</h2>
+        <p>Todo lo que necesitas para organizar tu próximo viaje por mar.</p>
+    </div>
+
+    <div class="home-service-grid">
+        <article class="home-service-card">
+            <div class="home-service-icon">🌊</div>
+            <h3>Destinos</h3>
+            <p>Explora los lugares disponibles para tu próximo viaje.</p>
+            <a asp-controller="Destinos" asp-action="Index">Ver destinos →</a>
+        </article>
+
+        <article class="home-service-card">
+            <div class="home-service-icon">🚤</div>
+            <h3>Viajes</h3>
+            <p>Consulta los viajes y horarios disponibles.</p>
+            <a asp-controller="Viajes" asp-action="Index">Ver viajes →</a>
+        </article>
+
+        <article class="home-service-card">
+            <div class="home-service-icon">🎫</div>
+            <h3>Reservaciones</h3>
+            <p>Organiza tus viajes y consulta tus reservaciones.</p>
+            <a asp-controller="Reservas" asp-action="MisReservas">Mis reservas →</a>
+        </article>
+    </div>
+</section>
+
+<section class="home-about">
+    <div>
+        <span>VIAJA CON CONFIANZA</span>
+        <h2>El mar te espera</h2>
+        <p>
+            Nuestro sistema facilita la consulta de viajes y la gestión
+            de reservaciones para que puedas concentrarte en disfrutar
+            tu experiencia.
+        </p>
+    </div>
+    <div class="home-about-decoration">⚓</div>
+</section>
