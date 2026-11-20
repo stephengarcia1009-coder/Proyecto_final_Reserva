@@ -52,7 +52,9 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
         .ThenInclude(r => r!.Destino)
 .Include(r => r.EstadoReserva)
                 .Include(r => r.DetallesReserva)
-                .Where(r => r.ClienteId == clienteId)
+                .Where(r => r.ClienteId == clienteId &&
+            r.Viaje != null &&
+            r.Viaje.FechaSalida >= DateTime.Now)
                 .AsNoTracking()
                 .ToListAsync();
         }
