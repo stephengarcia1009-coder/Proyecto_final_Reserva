@@ -12,9 +12,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthorization(options =>
+{
+    foreach (var permiso in Proyecto_De_Reserva_de_boletosMar.Constants.PermisosSistema.Todos)
+    {
+        options.AddPolicy(permiso, policy =>
+        {
+            policy.RequireAssertion(context =>
+                context.User.IsInRole("Administrador") ||
+                context.User.HasClaim("Permiso", permiso));
+        });
+    }
+    options.AddPolicy("Viajes.Gestionar.Acceso", policy =>
+    {
+        policy.RequireAssertion(context =>
+            context.User.IsInRole("Administrador") ||
+            context.User.HasClaim("Permiso", "Viajes.Gestionar"));
+    });
+});
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<PangaDbContext>()
     .AddDefaultTokenProviders();
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

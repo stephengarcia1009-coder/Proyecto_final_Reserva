@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
+using Proyecto_De_Reserva_de_boletosMar.Constants;
 
 namespace Proyecto_De_Reserva_de_boletosMar.Services
 {
@@ -18,6 +19,18 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
         {
             _userManager = userManager;
             _roleManager = roleManager;
+        }
+
+        private static string? ObtenerPermisoValido(string permiso)
+        {
+            if (string.IsNullOrWhiteSpace(permiso))
+                return null;
+
+            return PermisosSistema.Todos.FirstOrDefault(p =>
+                string.Equals(
+                    p,
+                    permiso.Trim(),
+                    StringComparison.OrdinalIgnoreCase));
         }
 
         public async Task<IEnumerable<string>> ObtenerPermisosUsuarioAsync(
@@ -54,18 +67,21 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
             string usuarioId, string permiso)
         {
             var usuario = await _userManager.FindByIdAsync(usuarioId);
+            var permisoValido = ObtenerPermisoValido(permiso);
 
-            if (usuario == null || string.IsNullOrWhiteSpace(permiso))
+            if (usuario == null || permisoValido == null)
                 return false;
 
             var claims = await _userManager.GetClaimsAsync(usuario);
 
             if (claims.Any(c =>
-                c.Type == TipoPermiso && c.Value == permiso))
+                c.Type == TipoPermiso &&
+                c.Value == permisoValido))
                 return false;
 
             var resultado = await _userManager.AddClaimAsync(
-                usuario, new Claim(TipoPermiso, permiso));
+                usuario,
+                new Claim(TipoPermiso, permisoValido));
 
             return resultado.Succeeded;
         }
@@ -90,18 +106,21 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
             string rolId, string permiso)
         {
             var rol = await _roleManager.FindByIdAsync(rolId);
+            var permisoValido = ObtenerPermisoValido(permiso);
 
-            if (rol == null || string.IsNullOrWhiteSpace(permiso))
+            if (rol == null || permisoValido == null)
                 return false;
 
             var claims = await _roleManager.GetClaimsAsync(rol);
 
             if (claims.Any(c =>
-                c.Type == TipoPermiso && c.Value == permiso))
+                c.Type == TipoPermiso &&
+                c.Value == permisoValido))
                 return false;
 
             var resultado = await _roleManager.AddClaimAsync(
-                rol, new Claim(TipoPermiso, permiso));
+                rol,
+                new Claim(TipoPermiso, permisoValido));
 
             return resultado.Succeeded;
         }

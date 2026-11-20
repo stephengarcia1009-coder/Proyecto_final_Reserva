@@ -7,7 +7,7 @@ using Proyecto_De_Reserva_de_boletosMar.Models;
 
 namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize]
     public class ViajesController : Controller
     {
         private readonly IViajeService _viajeService;
@@ -40,12 +40,14 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 "Nombre");
         }
 
+        [Authorize(Policy = "Viajes.Ver")]
         public async Task<IActionResult> Index()
         {
             var viajes = await _viajeService.ObtenerTodosAsync();
             return View(viajes);
         }
 
+        [Authorize(Policy = "Viajes.Ver")]
         public async Task<IActionResult> Details(int id)
         {
             var viaje = await _viajeService.ObtenerPorIdAsync(id);
@@ -55,7 +57,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             return View(viaje);
         }
-
+        [Authorize(Policy = "Viajes.Gestionar.Acceso")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -63,6 +65,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return View();
         }
 
+        [Authorize(Policy = "Viajes.Gestionar.Acceso")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Viaje viaje)
@@ -87,6 +90,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "Viajes.Gestionar.Acceso")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -99,7 +103,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             return View(viaje);
         }
-
+        [Authorize(Policy = "Viajes.Gestionar.Acceso")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Viaje viaje)
@@ -126,7 +130,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Policy = "Viajes.Gestionar.Acceso")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancelar(int id)

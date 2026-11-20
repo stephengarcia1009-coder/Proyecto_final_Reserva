@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.ViewModels;
@@ -11,13 +12,19 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IPermisoService _permisoService;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
         public UsuariosController(
             IUsuarioService usuarioService,
-            IPermisoService permisoService)
+            IPermisoService permisoService,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
         {
             _usuarioService = usuarioService;
             _permisoService = permisoService;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -104,6 +111,19 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             var resultado = await _permisoService.AsignarPermisoUsuarioAsync(
                 usuarioId, permiso.Trim());
 
+            if (resultado)
+            {
+                var usuario = await _userManager.FindByIdAsync(usuarioId);
+                var usuarioActual = await _userManager.GetUserAsync(User);
+
+                if (usuario != null &&
+                    usuarioActual != null &&
+                    usuarioActual.Id == usuarioId)
+                {
+                    await _signInManager.RefreshSignInAsync(usuario);
+                }
+            }
+
             TempData[resultado ? "Mensaje" : "Error"] =
                 resultado ? "Permiso asignado correctamente." : "No se pudo asignar el permiso.";
 
@@ -123,6 +143,19 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             var resultado = await _permisoService.QuitarPermisoUsuarioAsync(
                 usuarioId, permiso.Trim());
+
+            if (resultado)
+            {
+                var usuario = await _userManager.FindByIdAsync(usuarioId);
+                var usuarioActual = await _userManager.GetUserAsync(User);
+
+                if (usuario != null &&
+                    usuarioActual != null &&
+                    usuarioActual.Id == usuarioId)
+                {
+                    await _signInManager.RefreshSignInAsync(usuario);
+                }
+            }
 
             TempData[resultado ? "Mensaje" : "Error"] =
                 resultado ? "Permiso retirado correctamente." : "No se pudo retirar el permiso.";
