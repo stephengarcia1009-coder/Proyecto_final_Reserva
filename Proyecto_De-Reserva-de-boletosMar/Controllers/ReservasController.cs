@@ -14,17 +14,19 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         private readonly IReservaService _reservaService;
         private readonly IClienteService _clienteService;
         private readonly IViajeService _viajeService;
+        private readonly IPagoService _pagoService;
 
         public ReservasController(
-    IReservaService reservaService,
-    IClienteService clienteService,
-    IViajeService viajeService)
+      IReservaService reservaService,
+      IClienteService clienteService,
+      IViajeService viajeService,
+      IPagoService pagoService)
         {
             _reservaService = reservaService;
             _clienteService = clienteService;
             _viajeService = viajeService;
+            _pagoService = pagoService;
         }
-
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
@@ -227,6 +229,87 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             return RedirectToAction(nameof(MisReservas));
         }
+
+
+        [Authorize(Roles = "Cliente")]
+        [HttpGet]
+        public async Task<IActionResult> Pagar(int id)
+        {
+            var usuarioId = User.FindFirst(
+                System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(usuarioId))
+                return Unauthorized();
+
+            var cliente = await _clienteService.ObtenerPorUsuarioAsync(usuarioId);
+
+            if (cliente == null)
+                return NotFound();
+
+            var reserva = await _reservaService.ObtenerPorIdAsync(id);
+
+            if (reserva == null)
+                return NotFound();
+
+            // Verificar que la reserva pertenezca al cliente.
+            if (reserva.ClienteId != cliente.ClienteId)
+                return Forbid();
+
+            // Solo se pueden pagar reservas pendientes.
+            if (reserva.EstadoReservaId != 1)
+                return BadRequest("Esta reserva no está pendiente de pago.");
+
+            return View(reserva);
+        }
+
+
+        [Authorize(Roles = "Cliente")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcesarPago(int id, bool pagoExitoso)
+        {
+            var usuarioId = User.FindFirst(
+                System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(usuarioId))
+                return Unauthorized();
+
+            var cliente = await _clienteService.ObtenerPorUsuarioAsync(usuarioId);
+
+            if (cliente == null)
+                return NotFound();
+
+            var reserva = await _reservaService.ObtenerPorIdAsync(id);
+
+            if (reserva == null)
+                return NotFound();
+
+            if (reserva.ClienteId != cliente.ClienteId)
+                return Forbid();
+
+            if (reserva.EstadoReservaId != 1)
+                return BadRequest("La reserva no está pendiente de pago.");
+
+            var resultado = await _pagoService.ProcesarPagoAsync(
+                id,
+                2,
+                pagoExitoso
+            );
+
+            if (!resultado)
+            {
+                TempData["Error"] = "No fue posible procesar el pago.";
+                return RedirectToAction(nameof(Pagar), new { id });
+            }
+
+            if (pagoExitoso)
+                TempData["Mensaje"] = "¡Pago exitoso! Tu reserva ha sido confirmada.";
+            else
+                TempData["Error"] = "El pago fue rechazado. Puedes intentarlo nuevamente.";
+
+            return RedirectToAction(nameof(MisReservas));
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

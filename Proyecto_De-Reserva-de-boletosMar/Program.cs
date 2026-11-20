@@ -41,18 +41,27 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPermisoService, PermisoService>();
 builder.Services.AddScoped<IReservaService, ReservaService>();
+builder.Services.AddScoped<IPagoService, PagoService>();
 
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider
+    var services = scope.ServiceProvider;
+
+    var roleManager = services
         .GetRequiredService<RoleManager<IdentityRole>>();
 
-    await IdentitySeed.CrearRolesAsync(roleManager);
-}
+    var userManager = services
+        .GetRequiredService<UserManager<IdentityUser>>();
 
+    await IdentitySeed.CrearRolesAsync(roleManager);
+
+    await IdentitySeed.CrearAdministradorAsync(
+        userManager,
+        builder.Configuration);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
