@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Proyecto_De_Reserva_de_boletosMar.Models.Viaje>
+
+@{
+    ViewData["Title"] = "Viajes";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">Gestión de viajes</h2>
+            <p class="text-muted">Administra los viajes programados.</p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary">
+            + Programar viaje
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Ruta</th>
+                            <th>Panga</th>
+                            <th>Fecha de salida</th>
+                            <th>Estado</th>
+                            <th>Observaciones</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var viaje in Model)
+                            {
+                                <tr>
+                                    <td>@viaje.ViajeId</td>
+
+                                    <td>
+                                        @(viaje.Ruta?.Descripcion ?? $"Ruta #{viaje.RutaId}")
+                                    </td>
+
+                                    <td>
+                                        @(viaje.Panga?.Nombre ?? $"Panga #{viaje.PangaId}")
+                                    </td>
+
+                                    <td>
+                                        @viaje.FechaSalida.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+
+                                    <td>
+                                        @if (viaje.EstadoViajeId == 1)
+                                        {
+                                            <span class="badge bg-success">
+                                                Disponible
+                                            </span>
+                                        }
+                                        else if (viaje.EstadoViajeId == 2)
+                                        {
+                                            <span class="badge bg-danger">
+                                                Cancelado
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @(viaje.EstadoViaje?.Nombre ?? "Otro estado")
+                                            </span>
+                                        }
+                                </td>
+
+                                <td>
+                                    @(string.IsNullOrWhiteSpace(viaje.Observaciones)
+                                                                    ? "Sin observaciones"
+                                                                    : viaje.Observaciones)
+                            </td>
+
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="Details"
+                                               asp-route-id="@viaje.ViajeId"
+                                               class="btn btn-sm btn-outline-info">
+                                                Ver
+                                            </a>
+
+                                    @if (viaje.EstadoViajeId == 1)
+                                            {
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@viaje.ViajeId"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    Editar
+                                                </a>
+
+                                                <form asp-action="Cancelar"
+                                                      asp-route-id="@viaje.ViajeId"
+                                                      method="post"
+                                                      onsubmit="return confirm('¿Estás seguro de cancelar este viaje?');">
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger">
+                                                        Cancelar
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7"
+                                    class="text-center text-muted py-4">
+                                    No hay viajes registrados.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
