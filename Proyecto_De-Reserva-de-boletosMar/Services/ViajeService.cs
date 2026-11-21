@@ -29,6 +29,9 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
         {
             return await _context.Viajes
                 .Include(v => v.Ruta)
+                    .ThenInclude(r => r!.Origen)
+                .Include(v => v.Ruta)
+                    .ThenInclude(r => r!.Destino)
                 .Include(v => v.Panga)
                 .Include(v => v.EstadoViaje)
                 .AsNoTracking()
