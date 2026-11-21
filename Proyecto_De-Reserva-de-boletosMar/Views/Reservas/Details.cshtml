@@ -41,7 +41,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Total:</strong>
-                    <p>@Model.Total.ToString("C")</p>
+                   <p>@Model.Total.ToString("C2", new System.Globalization.CultureInfo("es-NI"))</p>
                 </div>
             </div>
 
@@ -112,7 +112,7 @@
                                     <td>@numero</td>
                                     <td>@pasajero.NombrePasajero</td>
                                     <td>@pasajero.TelefonoPasajero</td>
-                                    <td>@pasajero.PrecioUnitario.ToString("C")</td>
+                                    <td>@pasajero.PrecioUnitario.ToString("C2", new System.Globalization.CultureInfo("es-NI"))</td>
                                 </tr>
                                 numero++;
                             }
