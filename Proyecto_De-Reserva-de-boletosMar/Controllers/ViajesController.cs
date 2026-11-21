@@ -172,5 +172,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+       
     }
 }
