@@ -1,23 +1,32 @@
 ﻿
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.Models;
+using Microsoft.EntityFrameworkCore;
+using Proyecto_De_Reserva_de_boletosMar.Data;
 
 namespace Proyecto_De_Reserva_de_boletosMar.Services
 {
     public class RutaService : IRutaService
     {
         private readonly IGenericRepository<Ruta> _repository;
+        private readonly PangaDbContext _context;
 
-        public RutaService(IGenericRepository<Ruta> repository)
+        public RutaService(
+            IGenericRepository<Ruta> repository,
+            PangaDbContext context)
         {
             _repository = repository;
+            _context = context;
         }
 
         public async Task<IEnumerable<Ruta>> ObtenerTodasAsync()
         {
-            return await _repository.GetAllAsync();
+            return await _context.Rutas
+                .AsNoTracking()
+                .Include(r => r.Origen)
+                .Include(r => r.Destino)
+                .ToListAsync();
         }
-
         public async Task<Ruta?> ObtenerPorIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
