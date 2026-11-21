@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Acceso denegado";
+}
+
+<section class="error-page">
+    <div class="error-content">
+        <h1>Acceso restringido</h1>
+        <h2>403</h2>
+        <p>
+            No tienes permisos para acceder a esta sección.
+            Si crees que se trata de un error, contacta con el administrador.
+        </p>
+
+        <a asp-controller="Home" asp-action="Index" class="error-button">
+            Volver al inicio
+        </a>
+    </div>
+</section>
