@@ -50,7 +50,7 @@
                             @reserva.Viaje?.FechaSalida.ToString("dd/MM/yyyy HH:mm")
                         </td>
                         <td>@reserva.CantidadBoletos</td>
-                        <td>@reserva.Total.ToString("C")</td>
+                       <td>@reserva.Total.ToString("C2", new System.Globalization.CultureInfo("es-NI"))</td>
                         <td>@reserva.EstadoReserva?.Nombre</td>
                         <td>
                             <a asp-action="Details"
