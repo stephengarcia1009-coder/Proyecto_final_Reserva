@@ -93,6 +93,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> QuitarRol(string usuarioId, string rol)
@@ -101,6 +102,15 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 string.IsNullOrWhiteSpace(rol))
             {
                 TempData["Error"] = "Datos incompletos.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var usuarioActual = await _userManager.GetUserAsync(User);
+
+            if (rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase) &&
+                usuarioActual?.Id == usuarioId)
+            {
+                TempData["Error"] = "No puedes quitarte tu propio rol de Administrador.";
                 return RedirectToAction(nameof(Index));
             }
 
