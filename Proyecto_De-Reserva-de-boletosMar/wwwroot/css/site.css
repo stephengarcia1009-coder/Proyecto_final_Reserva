@@ -26,8 +26,10 @@ body {
   text-align: end;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
 }
 
 /* PAGINAS DE ERROR */
@@ -102,4 +104,83 @@ body {
         .error-content h2 {
             font-size: 70px;
         }
+}
+
+/* ESTILOS DE HOME */
+
+.home-section-heading {
+    margin-bottom: 30px;
+}
+
+    .home-section-heading h2 {
+        color: #123b5d;
+    }
+
+.home-service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.home-service-card {
+    background-color: white;
+    border: 1px solid #d9e3ec;
+    padding: 25px;
+    text-align: left;
+    border-radius: 5px;
+}
+
+    .home-service-card h3 {
+        color: #123b5d;
+        margin-bottom: 12px;
+    }
+
+    .home-service-card p {
+        color: #555;
+        min-height: 48px;
+    }
+
+    .home-service-card a {
+        color: #1976b9;
+        text-decoration: none;
+    }
+
+        .home-service-card a:hover {
+            text-decoration: underline;
+        }
+
+/* INFORMACION FINAL */
+
+.home-about {
+    padding: 40px 25px;
+    text-align: center;
+    background-color: white;
+}
+
+    .home-about h2 {
+        color: #123b5d;
+    }
+
+    .home-about p {
+        max-width: 650px;
+        margin: 15px auto;
+        color: #555;
+    }
+
+/* DISEÑO RESPONSIVE */
+
+@media (max-width: 768px) {
+    .home-hero {
+        padding: 30px 20px;
+    }
+
+        .home-hero h1 {
+            font-size: 28px;
+        }
+
+    .home-service-grid {
+        grid-template-columns: 1fr;
+    }
 }
