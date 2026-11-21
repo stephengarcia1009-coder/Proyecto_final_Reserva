@@ -1,0 +1,33 @@
+﻿@model Proyecto_De_Reserva_de_boletosMar.Models.ErrorViewModel
+
+@{
+    ViewData["Title"] = "Ha ocurrido un error";
+}
+
+<section class="error-page">
+    <div class="error-content">
+
+        <h1>¡Ups! Algo salió mal</h1>
+
+        <h2>500</h2>
+
+        <p>
+            No pudimos completar tu solicitud.
+            Intenta nuevamente más tarde.
+        </p>
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="error-button">
+            Volver al inicio
+        </a>
+
+        @if (Model?.ShowRequestId == true)
+        {
+            <p class="error-request">
+                Código de referencia: @Model.RequestId
+            </p>
+        }
+
+    </div>
+</section>

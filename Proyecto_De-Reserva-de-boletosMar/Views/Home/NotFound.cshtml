@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Página no encontrada";
+}
+
+<section class="error-page">
+    <div class="error-content">
+        <h1>¡Ups! No encontramos esta página</h1>
+
+        <h2>404</h2>
+
+        <p>
+            La página que buscas no existe o puede que haya cambiado de dirección.
+            Verifica la dirección e inténtalo nuevamente.
+        </p>
+
+        <a asp-controller="Home" asp-action="Index" class="error-button">
+            Volver al inicio
+        </a>
+    </div>
+</section>
