@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto_De_Reserva_de_boletosMar.Constants;
+using Proyecto_De_Reserva_de_boletosMar.DTOs;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.Models;
 
@@ -45,8 +46,15 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Destino destino)
+        public async Task<IActionResult> Create(DestinoDto dto)
         {
+            var destino = new Destino
+            {
+                Nombre = dto.Nombre,
+                Descripcion = dto.Descripcion,
+                Activo = dto.Activo
+            };
+
             if (!ModelState.IsValid)
                 return View(destino);
 
@@ -56,6 +64,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             {
                 ModelState.AddModelError(string.Empty,
                     "No se pudo registrar el destino. Verifica que no esté duplicado.");
+
                 return View(destino);
             }
 
@@ -77,10 +86,18 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Destino destino)
+        public async Task<IActionResult> Edit(int id, DestinoDto dto)
         {
-            if (id != destino.DestinoId)
+            if (id != dto.DestinoId)
                 return BadRequest();
+
+            var destino = new Destino
+            {
+                DestinoId = dto.DestinoId,
+                Nombre = dto.Nombre,
+                Descripcion = dto.Descripcion,
+                Activo = dto.Activo
+            };
 
             if (!ModelState.IsValid)
                 return View(destino);
@@ -91,6 +108,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             {
                 ModelState.AddModelError(string.Empty,
                     "No se pudo actualizar el destino.");
+
                 return View(destino);
             }
 
