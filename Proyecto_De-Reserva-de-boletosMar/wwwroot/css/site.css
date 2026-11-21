@@ -1,248 +1,176 @@
-﻿html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
-
-/* ===========================
-   PAGINA PRINCIPAL - HOME
-=========================== */
+﻿
+/* PAGINA DE INICIO */
 
 .home-hero {
-    min-height: 480px;
+    min-height: 380px;
     display: flex;
     align-items: center;
-    padding: 70px 8%;
-    border-radius: 18px;
-    background-image: linear-gradient(rgba(3, 27, 49, 0.55), rgba(3, 27, 49, 0.55)), url('/Imagen/rotulo.jpg');
+    padding: 50px;
+    background-color: #123b5d;
+    background-image: linear-gradient( rgba(18, 59, 93, 0.75), rgba(18, 59, 93, 0.75) ), url('/Imagen/rotulo.jpg');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
     color: white;
-    position: relative;
-    overflow: hidden;
 }
-
-    .home-hero::after {
-        content: "⚓";
-        position: absolute;
-        right: 8%;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 210px;
-        opacity: 0.12;
-    }
 
 .home-hero-content {
-    max-width: 650px;
-    position: relative;
-    z-index: 1;
-}
-
-.home-tag,
-.home-section-heading span,
-.home-about span {
-    color: #7dd3fc;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
+    max-width: 600px;
 }
 
 .home-hero h1 {
-    font-size: clamp(38px, 5vw, 62px);
-    font-weight: 800;
-    line-height: 1.1;
-    margin: 22px 0;
+    font-size: 36px;
+    margin-bottom: 20px;
 }
 
 .home-hero p {
     font-size: 17px;
-    line-height: 1.8;
-    color: #e0f2fe;
-    max-width: 540px;
+    line-height: 1.6;
+    margin-bottom: 25px;
 }
+
+/* ETIQUETAS */
+
+.home-tag,
+.home-section-heading span,
+.home-about span {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #1976b9;
+}
+
+.home-hero .home-tag {
+    color: white;
+}
+
+/* BOTONES */
 
 .home-buttons {
     display: flex;
+    gap: 12px;
     flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 30px;
 }
 
 .btn-home-primary,
 .btn-home-secondary {
-    padding: 13px 24px;
-    border-radius: 8px;
-    font-weight: 700;
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 4px;
     text-decoration: none;
-    transition: 0.3s;
 }
 
 .btn-home-primary {
-    background: #38bdf8;
-    color: #082f49;
+    background-color: #1976b9;
+    color: white;
 }
-
-    .btn-home-primary:hover {
-        background: #7dd3fc;
-        color: #082f49;
-        transform: translateY(-3px);
-    }
 
 .btn-home-secondary {
     border: 1px solid white;
     color: white;
 }
 
-    .btn-home-secondary:hover {
-        background: white;
-        color: #075985;
-    }
+.btn-home-primary:hover {
+    background-color: #145d91;
+    color: white;
+}
+
+.btn-home-secondary:hover {
+    background-color: white;
+    color: #123b5d;
+}
+
+/* SERVICIOS */
 
 .home-services {
-    padding: 75px 3%;
+    padding: 45px 30px;
+    text-align: center;
+    background-color: #f4f8fc;
+}
+
+    .home-services h2 {
+        color: #123b5d;
+        margin-bottom: 10px;
+    }
+
+.home-description {
+    color: #555;
+    margin-bottom: 30px;
 }
 
 .home-section-heading {
-    text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
-    .home-section-heading span {
-        color: #0284c7;
-    }
-
     .home-section-heading h2 {
-        color: #0c3553;
-        font-size: 32px;
-        font-weight: 800;
-        margin: 12px 0;
-    }
-
-    .home-section-heading p {
-        color: #64748b;
+        color: #123b5d;
     }
 
 .home-service-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 20px;
+    max-width: 1100px;
+    margin: auto;
 }
 
 .home-service-card {
-    padding: 30px 25px;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
-    transition: 0.3s;
+    background-color: white;
+    border: 1px solid #d9e3ec;
+    padding: 25px;
+    text-align: left;
+    border-radius: 5px;
 }
 
-    .home-service-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    .home-service-card h3 {
+        color: #123b5d;
+        margin-bottom: 12px;
     }
 
-.home-service-icon {
-    font-size: 38px;
-    margin-bottom: 15px;
-}
+    .home-service-card p {
+        color: #555;
+        min-height: 48px;
+    }
 
-.home-service-card h3 {
-    color: #0c3553;
-    font-weight: 800;
-}
+    .home-service-card a {
+        color: #1976b9;
+        text-decoration: none;
+    }
 
-.home-service-card p {
-    color: #64748b;
-    line-height: 1.7;
-}
+        .home-service-card a:hover {
+            text-decoration: underline;
+        }
 
-.home-service-card a {
-    color: #0284c7;
-    font-weight: 700;
-    text-decoration: none;
-}
+/* INFORMACION FINAL */
 
 .home-about {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 30px;
-    padding: 45px;
-    margin: 0 3% 50px;
-    background: #e0f2fe;
-    border-radius: 16px;
+    padding: 40px 25px;
+    text-align: center;
+    background-color: white;
 }
 
-    .home-about span {
-        color: #0284c7;
-    }
-
     .home-about h2 {
-        color: #0c3553;
-        font-size: 30px;
-        font-weight: 800;
-        margin: 12px 0;
+        color: #123b5d;
     }
 
     .home-about p {
-        color: #475569;
         max-width: 650px;
-        line-height: 1.8;
+        margin: 15px auto;
+        color: #555;
     }
 
-.home-about-decoration {
-    font-size: 85px;
-    color: #0284c7;
-}
-
-/* Adaptación a celulares */
+/* DISEÑO RESPONSIVE */
 
 @media (max-width: 768px) {
     .home-hero {
-        min-height: 420px;
-        padding: 45px 25px;
+        padding: 30px 20px;
     }
 
-        .home-hero::after {
-            right: -20px;
-            font-size: 130px;
+        .home-hero h1 {
+            font-size: 28px;
         }
 
     .home-service-grid {
         grid-template-columns: 1fr;
-    }
-
-    .home-about {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 30px;
     }
 }
