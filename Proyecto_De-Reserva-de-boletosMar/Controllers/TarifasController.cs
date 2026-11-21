@@ -82,7 +82,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
                 if (tarifaExistente != null)
                 {
-                    TempData["Error"] = "Esta ruta ya tiene una tarifa registrada.";
+                    TempData["ErrorTarifa"] = "Esta ruta ya tiene una tarifa registrada.";
                     return RedirectToAction(nameof(Index));
                 }
             }
