@@ -8,7 +8,8 @@
     padding: 50px;
     background-color: #123b5d;
     background-image: linear-gradient( rgba(18, 59, 93, 0.75), rgba(18, 59, 93, 0.75) ), url('/Imagen/rotulo.jpg');
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     background-position: center;
     color: white;
 }
