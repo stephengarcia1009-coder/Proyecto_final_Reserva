@@ -29,13 +29,14 @@
                     <div class="mb-3">
                         <label asp-for="OrigenId"
                                class="form-label fw-semibold">
-                            Identificador del origen
+                            Destino de origen
                         </label>
 
-                        <input asp-for="OrigenId"
-                               type="number"
-                               class="form-control"
-                               min="1" />
+                        <select asp-for="OrigenId"
+                                asp-items="ViewBag.Destinos"
+                                class="form-select">
+                            <option value="">Seleccione el origen</option>
+                        </select>
 
                         <span asp-validation-for="OrigenId"
                               class="text-danger"></span>
@@ -44,13 +45,14 @@
                     <div class="mb-3">
                         <label asp-for="DestinoId"
                                class="form-label fw-semibold">
-                            Identificador del destino
+                            Destino de llegada
                         </label>
 
-                        <input asp-for="DestinoId"
-                               type="number"
-                               class="form-control"
-                               min="1" />
+                        <select asp-for="DestinoId"
+                                asp-items="ViewBag.Destinos"
+                                class="form-select">
+                            <option value="">Seleccione el destino</option>
+                        </select>
 
                         <span asp-validation-for="DestinoId"
                               class="text-danger"></span>
@@ -102,4 +104,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
