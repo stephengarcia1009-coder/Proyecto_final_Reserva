@@ -29,7 +29,11 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
         }
         public async Task<Ruta?> ObtenerPorIdAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            return await _context.Rutas
+                .AsNoTracking()
+                .Include(r => r.Origen)
+                .Include(r => r.Destino)
+                .FirstOrDefaultAsync(r => r.RutaId == id);
         }
 
         public async Task<bool> RegistrarAsync(Ruta ruta)

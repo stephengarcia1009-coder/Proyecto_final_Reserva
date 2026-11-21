@@ -30,10 +30,14 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             var rutas = await _rutaService.ObtenerTodasAsync();
             var pangas = await _pangaService.ObtenerTodasAsync();
 
-            ViewBag.Rutas = new SelectList(
-                rutas.Where(r => r.Activa),
-                "RutaId",
-                "Descripcion");
+            ViewBag.Rutas = rutas
+                .Where(r => r.Activa)
+                .Select(r => new SelectListItem
+                {
+                    Value = r.RutaId.ToString(),
+                    Text = $"{r.Origen?.Nombre ?? "Origen"} - {r.Destino?.Nombre ?? "Destino"}"
+                })
+                .ToList();
 
             ViewBag.Pangas = new SelectList(
                 pangas,
