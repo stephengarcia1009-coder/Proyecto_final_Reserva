@@ -16,6 +16,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Interfaces
         Task<bool> ActualizarAsync(int id, Viaje viaje);
 
         Task<bool> CancelarAsync(int id);
+
+       
     }
 }
-
