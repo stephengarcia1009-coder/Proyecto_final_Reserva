@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Proyecto_De_Reserva_de_boletosMar.DTOs;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.Models;
@@ -11,10 +12,25 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
     public class RutasController : Controller
     {
         private readonly IRutaService _rutaService;
+        private readonly IDestinoService _destinoService;
 
-        public RutasController(IRutaService rutaService)
+        public RutasController(
+            IRutaService rutaService,
+            IDestinoService destinoService)
         {
             _rutaService = rutaService;
+            _destinoService = destinoService;
+        }
+
+        private async Task CargarDestinosAsync()
+        {
+            var destinos = await _destinoService.ObtenerTodosAsync();
+
+            ViewBag.Destinos = new SelectList(
+                destinos.Where(d => d.Activo),
+                "DestinoId",
+                "Nombre"
+            );
         }
 
         public async Task<IActionResult> Index()
@@ -34,8 +50,9 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await CargarDestinosAsync();
             return View(new RutaDto());
         }
 
@@ -44,7 +61,10 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         public async Task<IActionResult> Create(RutaDto rutaDto)
         {
             if (!ModelState.IsValid)
+            {
+                await CargarDestinosAsync();
                 return View(rutaDto);
+            }
 
             var ruta = new Ruta
             {
@@ -61,6 +81,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 ModelState.AddModelError(string.Empty,
                     "No se pudo registrar la ruta. Verifica que los datos sean correctos y que no esté duplicada.");
 
+                await CargarDestinosAsync();
                 return View(rutaDto);
             }
 
@@ -84,6 +105,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 Activa = ruta.Activa
             };
 
+            await CargarDestinosAsync();
             return View(rutaDto);
         }
 
@@ -95,7 +117,10 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 return BadRequest();
 
             if (!ModelState.IsValid)
+            {
+                await CargarDestinosAsync();
                 return View(rutaDto);
+            }
 
             var ruta = new Ruta
             {
@@ -113,6 +138,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 ModelState.AddModelError(string.Empty,
                     "No se pudo actualizar la ruta.");
 
+                await CargarDestinosAsync();
                 return View(rutaDto);
             }
 
