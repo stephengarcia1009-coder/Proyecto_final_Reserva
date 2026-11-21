@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Proyecto_De_Reserva_de_boletosMar.DTOs;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.Models;
 
@@ -47,26 +48,36 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 }
             }
 
-            return View();
+            return View(new TarifaDto
+            {
+                RutaId = rutaId ?? 0
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Tarifa tarifa)
+        public async Task<IActionResult> Create(TarifaDto tarifaDto)
         {
             if (!ModelState.IsValid)
-                return View(tarifa);
+                return View(tarifaDto);
 
             var tarifaExistente = await _tarifaService
-                .ObtenerPorRutaAsync(tarifa.RutaId);
+                .ObtenerPorRutaAsync(tarifaDto.RutaId);
 
             if (tarifaExistente != null)
             {
-                ModelState.AddModelError(nameof(tarifa.RutaId),
+                ModelState.AddModelError(nameof(tarifaDto.RutaId),
                     "Esta ruta ya tiene una tarifa registrada.");
 
-                return View(tarifa);
+                return View(tarifaDto);
             }
+
+            var tarifa = new Tarifa
+            {
+                RutaId = tarifaDto.RutaId,
+                Precio = tarifaDto.Precio,
+                FechaActualizacion = DateTime.Now
+            };
 
             var resultado = await _tarifaService.RegistrarAsync(tarifa);
 
@@ -75,7 +86,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 ModelState.AddModelError(string.Empty,
                     "No se pudo registrar la tarifa.");
 
-                return View(tarifa);
+                return View(tarifaDto);
             }
 
             return RedirectToAction(nameof(Index));
@@ -89,27 +100,28 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             if (tarifa == null)
                 return NotFound();
 
-            return View(tarifa);
+            var tarifaDto = new TarifaDto
+            {
+                TarifaId = tarifa.TarifaId,
+                RutaId = tarifa.RutaId,
+                Precio = tarifa.Precio,
+                FechaActualizacion = tarifa.FechaActualizacion
+            };
+
+            return View(tarifaDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, decimal nuevoPrecio)
+        public async Task<IActionResult> Edit(int id, TarifaDto tarifaDto)
         {
-            if (nuevoPrecio <= 0)
-            {
-                ModelState.AddModelError(nameof(nuevoPrecio),
-                    "El precio debe ser mayor que cero.");
+            if (id != tarifaDto.TarifaId)
+                return BadRequest();
 
-                var tarifaActual = await _tarifaService.ObtenerPorIdAsync(id);
+            if (!ModelState.IsValid)
+                return View(tarifaDto);
 
-                if (tarifaActual == null)
-                    return NotFound();
-
-                return View(tarifaActual);
-            }
-
-            var resultado = await _tarifaService.ActualizarAsync(id, nuevoPrecio);
+            var resultado = await _tarifaService.ActualizarAsync(id, tarifaDto.Precio);
 
             if (!resultado)
                 return NotFound();
