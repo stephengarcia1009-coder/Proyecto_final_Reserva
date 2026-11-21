@@ -18,18 +18,21 @@
                 <div asp-validation-summary="ModelOnly"
                      class="alert alert-danger"></div>
 
+               
                 <div class="mb-3">
                     <label asp-for="RutaId" class="form-label fw-semibold">
-                        ID de la ruta
+                        Seleccionar ruta
                     </label>
-                    <input asp-for="RutaId"
-                           type="number"
-                           class="form-control"
-                           min="1"
-                           placeholder="Ingresa el ID de la ruta" />
-                    <span asp-validation-for="RutaId"
-                          class="text-danger"></span>
+
+                    <select asp-for="RutaId"
+                            asp-items="ViewBag.Rutas"
+                            class="form-select">
+                        <option value="0">-- Selecciona una ruta --</option>
+                    </select>
+
+                    <span asp-validation-for="RutaId" class="text-danger"></span>
                 </div>
+
 
                 <div class="mb-3">
                     <label asp-for="Precio" class="form-label fw-semibold">

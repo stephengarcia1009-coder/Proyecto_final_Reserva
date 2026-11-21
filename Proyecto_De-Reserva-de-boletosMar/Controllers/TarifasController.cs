@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Proyecto_De_Reserva_de_boletosMar.DTOs;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.Models;
@@ -11,10 +12,14 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
     public class TarifasController : Controller
     {
         private readonly ITarifaService _tarifaService;
+        private readonly IRutaService _rutaService;
 
-        public TarifasController(ITarifaService tarifaService)
+        public TarifasController(
+            ITarifaService tarifaService,
+            IRutaService rutaService)
         {
             _tarifaService = tarifaService;
+            _rutaService = rutaService;
         }
 
         public async Task<IActionResult> Index()
@@ -33,6 +38,40 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             return View(tarifa);
         }
 
+        private async Task CargarRutasDisponiblesAsync(int? rutaSeleccionada = null)
+        {
+            var rutas = await _rutaService.ObtenerTodasAsync();
+            var tarifas = await _tarifaService.ObtenerTodasAsync();
+
+            var rutasConTarifa = tarifas
+                .Select(t => t.RutaId)
+                .ToHashSet();
+
+            var rutasDisponibles = rutas
+                .Where(r => r.Activa && !rutasConTarifa.Contains(r.RutaId))
+                .Select(r => new SelectListItem
+                {
+                    Value = r.RutaId.ToString(),
+                    Text = $"{r.Origen?.Nombre ?? "Origen"} → {r.Destino?.Nombre ?? "Destino"}",
+                    Selected = r.RutaId == rutaSeleccionada
+                })
+                .ToList();
+
+            ViewBag.Rutas = rutasDisponibles;
+        }
+
+        private async Task<string> ObtenerNombreRutaAsync(int rutaId)
+        {
+            var rutas = await _rutaService.ObtenerTodasAsync();
+
+            var ruta = rutas.FirstOrDefault(r => r.RutaId == rutaId);
+
+            if (ruta == null)
+                return "Ruta no encontrada";
+
+            return $"{ruta.Origen?.Nombre ?? "Origen"} → {ruta.Destino?.Nombre ?? "Destino"}";
+        }
+
         [HttpGet]
         public async Task<IActionResult> Create(int? rutaId)
         {
@@ -48,6 +87,8 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 }
             }
 
+            await CargarRutasDisponiblesAsync(rutaId);
+
             return View(new TarifaDto
             {
                 RutaId = rutaId ?? 0
@@ -59,7 +100,10 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         public async Task<IActionResult> Create(TarifaDto tarifaDto)
         {
             if (!ModelState.IsValid)
+            {
+                await CargarRutasDisponiblesAsync(tarifaDto.RutaId);
                 return View(tarifaDto);
+            }
 
             var tarifaExistente = await _tarifaService
                 .ObtenerPorRutaAsync(tarifaDto.RutaId);
@@ -69,6 +113,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 ModelState.AddModelError(nameof(tarifaDto.RutaId),
                     "Esta ruta ya tiene una tarifa registrada.");
 
+                await CargarRutasDisponiblesAsync(tarifaDto.RutaId);
                 return View(tarifaDto);
             }
 
@@ -86,6 +131,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 ModelState.AddModelError(string.Empty,
                     "No se pudo registrar la tarifa.");
 
+                await CargarRutasDisponiblesAsync(tarifaDto.RutaId);
                 return View(tarifaDto);
             }
 
@@ -99,6 +145,8 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
 
             if (tarifa == null)
                 return NotFound();
+
+            ViewBag.NombreRuta = await ObtenerNombreRutaAsync(tarifa.RutaId);
 
             var tarifaDto = new TarifaDto
             {
@@ -119,7 +167,15 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 return BadRequest();
 
             if (!ModelState.IsValid)
+            {
+                var tarifaActual = await _tarifaService.ObtenerPorIdAsync(id);
+
+                if (tarifaActual == null)
+                    return NotFound();
+
+                ViewBag.NombreRuta = await ObtenerNombreRutaAsync(tarifaActual.RutaId);
                 return View(tarifaDto);
+            }
 
             var resultado = await _tarifaService.ActualizarAsync(id, tarifaDto.Precio);
 
