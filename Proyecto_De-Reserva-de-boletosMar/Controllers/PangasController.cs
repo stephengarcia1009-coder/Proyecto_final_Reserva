@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Proyecto_De_Reserva_de_boletosMar.DTOs;
 using Proyecto_De_Reserva_de_boletosMar.Interfaces;
 using Proyecto_De_Reserva_de_boletosMar.Models;
 
@@ -35,15 +36,22 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new PangaDto());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Panga panga)
+        public async Task<IActionResult> Create(PangaDto pangaDto)
         {
             if (!ModelState.IsValid)
-                return View(panga);
+                return View(pangaDto);
+
+            var panga = new Panga
+            {
+                Nombre = pangaDto.Nombre,
+                Capacidad = pangaDto.Capacidad,
+                Descripcion = pangaDto.Descripcion
+            };
 
             var resultado = await _pangaService.RegistrarAsync(panga);
 
@@ -52,7 +60,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 ModelState.AddModelError(string.Empty,
                     "No se pudo registrar la panga. Verifica los datos y que el nombre no esté duplicado.");
 
-                return View(panga);
+                return View(pangaDto);
             }
 
             return RedirectToAction(nameof(Index));
@@ -66,18 +74,34 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
             if (panga == null)
                 return NotFound();
 
-            return View(panga);
+            var pangaDto = new PangaDto
+            {
+                PangaId = panga.PangaId,
+                Nombre = panga.Nombre,
+                Capacidad = panga.Capacidad,
+                Descripcion = panga.Descripcion
+            };
+
+            return View(pangaDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Panga panga)
+        public async Task<IActionResult> Edit(int id, PangaDto pangaDto)
         {
-            if (id != panga.PangaId)
+            if (id != pangaDto.PangaId)
                 return BadRequest();
 
             if (!ModelState.IsValid)
-                return View(panga);
+                return View(pangaDto);
+
+            var panga = new Panga
+            {
+                PangaId = pangaDto.PangaId,
+                Nombre = pangaDto.Nombre,
+                Capacidad = pangaDto.Capacidad,
+                Descripcion = pangaDto.Descripcion
+            };
 
             var resultado = await _pangaService.ActualizarAsync(id, panga);
 
@@ -86,7 +110,7 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
                 ModelState.AddModelError(string.Empty,
                     "No se pudo actualizar la panga.");
 
-                return View(panga);
+                return View(pangaDto);
             }
 
             return RedirectToAction(nameof(Index));
