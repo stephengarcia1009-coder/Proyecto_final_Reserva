@@ -43,7 +43,11 @@
                             {
                                 <tr>
                                     <td>@tarifa.TarifaId</td>
-                                    <td>Ruta #@tarifa.RutaId</td>
+                                    <td>
+                                        @(ViewBag.NombresRutas.ContainsKey(tarifa.RutaId)
+                                                                        ? ViewBag.NombresRutas[tarifa.RutaId]
+                                                                        : $"Ruta #{tarifa.RutaId}")
+                            </td>
                                     <td>C$ @tarifa.Precio.ToString("N2")</td>
                                     <td>@tarifa.FechaActualizacion.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td class="text-center">

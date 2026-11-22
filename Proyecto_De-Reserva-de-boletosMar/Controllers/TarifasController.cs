@@ -25,6 +25,13 @@ namespace Proyecto_De_Reserva_de_boletosMar.Controllers
         public async Task<IActionResult> Index()
         {
             var tarifas = await _tarifaService.ObtenerTodasAsync();
+            var rutas = await _rutaService.ObtenerTodasAsync();
+
+            ViewBag.NombresRutas = rutas.ToDictionary(
+                r => r.RutaId,
+                r => $"{r.Origen?.Nombre ?? "Origen"} - {r.Destino?.Nombre ?? "Destino"}"
+            );
+
             return View(tarifas);
         }
 
