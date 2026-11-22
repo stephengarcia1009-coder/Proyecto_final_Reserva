@@ -41,7 +41,9 @@
                                     <td>@viaje.ViajeId</td>
 
                                     <td>
-                                        @(viaje.Ruta?.Descripcion ?? $"Ruta #{viaje.RutaId}")
+                                        @(viaje.Ruta?.Origen != null && viaje.Ruta?.Destino != null
+                                                                        ? $"{viaje.Ruta.Origen.Nombre} - {viaje.Ruta.Destino.Nombre}"
+                                                                        : viaje.Ruta?.Descripcion ?? $"Ruta #{viaje.RutaId}")
                                     </td>
 
                                     <td>
