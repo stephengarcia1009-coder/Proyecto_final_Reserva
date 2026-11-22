@@ -32,18 +32,25 @@ namespace Proyecto_De_Reserva_de_boletosMar.Services
                 .ToListAsync();
         }
 
+
         public async Task<Reserva?> ObtenerPorIdAsync(int id)
         {
             return await _context.Reservas
                 .Include(r => r.Cliente)
                 .Include(r => r.Viaje)
                     .ThenInclude(v => v!.Ruta)
+                        .ThenInclude(r => r!.Origen)
+                .Include(r => r.Viaje)
+                    .ThenInclude(v => v!.Ruta)
+                        .ThenInclude(r => r!.Destino)
                 .Include(r => r.Viaje)
                     .ThenInclude(v => v!.Panga)
                 .Include(r => r.EstadoReserva)
                 .Include(r => r.DetallesReserva)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.ReservaId == id);
         }
+
 
         public async Task<IEnumerable<Reserva>> ObtenerPorClienteAsync(int clienteId)
         {
